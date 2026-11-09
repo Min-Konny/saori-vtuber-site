@@ -1,0 +1,1 @@
+{"$schema":"https://openapi.vercel.sh/vercel.json","functions":{"api/videos.js":{"maxDuration":20}},"regions":["iad1"]}
