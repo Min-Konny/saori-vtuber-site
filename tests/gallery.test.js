@@ -16,18 +16,18 @@ test('a whole exhibition takes less than four extra screens and reverses without
   assert.equal(sceneAt(99999, top, height, exhibition.length).active, exhibition.length - 1);
 });
 
-test('artworks orbit and rotate without zoom or perspective, settling upright', () => {
+test('artworks remain upright and constant-sized while changing scenes', () => {
   const main = artworkPose(2, 2);
-  assert.equal(main.x, 0); assert.equal(main.y, 0); assert.equal(main.rotation, 0); assert.equal(main.opacity, 1);
+  assert.equal(main.x, 0); assert.equal(main.opacity, 1);
   for (const position of [0, .25, .5, 1, 2, 3.5, 5]) {
-    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'rotation', 'x', 'y']);
+    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'x']);
   }
   assert.ok(artworkPose(1, 2).x < -60);
   assert.ok(artworkPose(3, 2).x > 60);
   assert.equal(artworkPose(4, 2).opacity, 0);
   assert.ok(artworkPose(1, 1.5).x < 0 && artworkPose(2, 1.5).x > 0);
-  assert.equal(artworkPose(1, 1.5).rotation, -45);
-  assert.equal(artworkPose(2, 1.5).rotation, 45);
+  const code = readFileSync(new URL('../assets/gallery.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(code, /pose\.(?:rotation|scale|y)/);
 });
 
 test('seventeen approved artworks retain stable IDs and excluded images are absent everywhere', () => {

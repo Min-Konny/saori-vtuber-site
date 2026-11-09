@@ -122,7 +122,7 @@ function draw() {
   current = state.active;
   pieces.forEach((piece, index) => {
     const pose = artworkPose(index, position);
-    piece.style.transform = `translate(${pose.x}vw, ${pose.y}vh) rotate(${pose.rotation}deg)`;
+    piece.style.transform = `translateX(${pose.x}vw)`;
     piece.style.opacity = pose.opacity;
     piece.inert = index !== current;
     piece.setAttribute('aria-hidden', String(index !== current));

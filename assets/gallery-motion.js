@@ -9,11 +9,8 @@ export function sceneAt(scroll, top, viewportHeight, count) {
 
 export function artworkPose(index, position) {
   const distance = index - position;
-  const angle = clamp(distance, -1.2, 1.2) * Math.PI / 2;
   return {
-    x: Math.sin(angle) * 65,
-    y: (1 - Math.cos(angle)) * 20,
-    rotation: clamp(distance, -1.5, 1.5) * 90,
+    x: distance * 112,
     opacity: clamp(1.8 - Math.abs(distance) * 1.1),
   };
 }
