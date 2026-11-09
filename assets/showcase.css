@@ -31,14 +31,14 @@
   #youtube .yt-card { position: sticky; top: 96px; animation: card-depth linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
   #youtube .yt-card:nth-child(2) { top: 112px; }
   #youtube .yt-card:nth-child(3) { top: 128px; }
-  #youtube .yt-card:focus-within { transform: none; }
+  #youtube .yt-card:focus-within { animation: none; transform: none; z-index: 10; }
   .hero-art-stage { animation: portrait-depth linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
  }
  @media (prefers-reduced-motion: no-preference) {
   #youtube .yt-thumb-wrap img { animation: image-arrival linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
  }
 }
-@keyframes card-depth { from { transform: translateY(36px) rotateX(4deg) scale(.94); } to { transform: translateY(0) rotateX(0) scale(1); } }
+@keyframes card-depth { from { transform: translateY(64px) rotateX(12deg) rotateY(-4deg) scale(.88); } to { transform: translateY(0) rotateX(0) rotateY(0) scale(1); } }
 @keyframes image-arrival { from { transform: scale(1.075); } to { transform: scale(1); } }
 @keyframes portrait-depth { from { transform: translateY(0); } to { transform: translateY(36px); } }
 @media (max-width: 900px) {
@@ -56,4 +56,45 @@
 @media (prefers-reduced-motion: reduce) {
  #youtube .yt-card, #youtube .yt-thumb-wrap img, .hero-art-stage { animation: none !important; transform: none !important; }
  #youtube .yt-card:nth-child(n) { position: relative; top: auto; margin-inline: 0; }
+}
+
+/* Large product frames continue the video gallery's depth and soft pink grid. */
+#shop .shop-inner { max-width: 1080px; }
+#shop .shop-grid { grid-template-columns: minmax(0, 1fr); gap: 72px; perspective: 1600px; }
+#shop .shop-card { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr); align-items: stretch; border-radius: 28px; background: #fff9fc; }
+#shop .shop-card-img-wrap { aspect-ratio: 4 / 3; border-radius: 0; background: #fff; }
+#shop .shop-card-thumb { object-fit: contain; background: #fff4f8; }
+#shop .shop-card-body { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(24px, 4vw, 48px); background: linear-gradient(135deg, #fff9fc, #ffe7f1); }
+#shop .shop-card-title { font-size: clamp(20px, 2.5vw, 30px); line-height: 1.65; color: var(--red-dark); }
+#shop .shop-card-sub { margin-top: 12px; color: var(--text-mid); }
+#shop .shop-card-price { font-size: 30px; margin-top: 20px; color: var(--red-main); }
+#shop .shop-card-badge { color: var(--red-dark); background: #fbd2df; }
+#shop .shop-card:nth-child(2) { margin-inline: 5% 0; }
+#shop .shop-card:nth-child(3) { margin-inline: 0 5%; }
+#shop .shop-card:focus-visible { outline: 3px solid var(--red-main); outline-offset: 6px; }
+@supports (animation-timeline: view()) {
+ @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  #shop .shop-card { animation: product-depth linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  #shop .shop-card:nth-child(2) { animation-name: product-depth-reverse; }
+  #shop .shop-card:focus-visible { animation: none; transform: none; }
+ }
+}
+@keyframes product-depth { from { transform: translateY(70px) rotateX(8deg) rotateY(-10deg) scale(.88); } to { transform: translateY(0) rotateX(0) rotateY(0) scale(1); } }
+@keyframes product-depth-reverse { from { transform: translateY(70px) rotateX(8deg) rotateY(10deg) scale(.88); } to { transform: translateY(0) rotateX(0) rotateY(0) scale(1); } }
+/* A short desktop must still show the whole focused card below the navigation. */
+@media (min-width: 901px) {
+ #youtube .yt-thumb-wrap { max-height: min(510px, calc(100svh - 300px)); }
+}
+@media (max-height: 699px) {
+ #youtube .yt-card:nth-child(n) { position: relative; top: auto; }
+}
+@media (max-width: 900px) {
+ #shop .shop-grid { gap: 32px; perspective: none; }
+ #shop .shop-card:nth-child(n) { margin-inline: 0; grid-template-columns: minmax(0, 1fr); border-radius: 22px; transform: none; }
+ #shop .shop-card-img-wrap { aspect-ratio: 4 / 3; }
+ #shop .shop-card-body { padding: 24px; }
+ #shop .shop-card-title { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ #shop .shop-card { animation: none !important; transform: none !important; }
 }
