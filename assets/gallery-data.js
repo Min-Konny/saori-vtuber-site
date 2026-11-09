@@ -17,5 +17,9 @@ export const artworks = descriptions.flatMap((alt, index) => alt ? [{
   title: `Fan art ${String(index + 1).padStart(2, '0')}`,
   subtitle: '#さおり見てくれ', credit: '', alt, kind: 'artwork', creator: '', source: '',
 }] : []);
-export const exhibition = [14, 2, 8, 15, 19, 7].map(number => artworks.find(art => art.id === `s${number}`));
-export const companions = [4, 5, 12, 17, 18, 11].map(number => artworks.find(art => art.id === `s${number}`));
+// Every approved work gets a full-size scene, including on mobile.
+const opening = [14, 2, 8, 15, 19, 7];
+export const exhibition = [
+  ...opening.map(number => artworks.find(art => art.id === `s${number}`)),
+  ...artworks.filter(art => !opening.includes(Number(art.id.slice(1)))),
+];

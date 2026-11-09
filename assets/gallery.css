@@ -39,8 +39,8 @@
 .gallery-ready:not(.gallery-static) .gallery-art-button[data-kind="object"] img { max-height: 100%; width: auto; max-width: 100%; object-fit: contain; }
 .gallery-ready:not(.gallery-static) .gallery-piece figcaption { position: absolute; left: 5vw; top: auto; bottom: 4%; width: 23%; text-align: left; pointer-events: none; }
 .gallery-ready:not(.gallery-static) .gallery-piece h3 { font-size: clamp(24px, 3vw, 42px); }
-.gallery-ready:not(.gallery-static) .gallery-piece[data-kind="artwork"] .gallery-art-button { width: 65vw; transform: translateX(14vw); }
-.gallery-ready:not(.gallery-static) .gallery-piece[data-layout="left"][data-kind="artwork"] .gallery-art-button { transform: translateX(-14vw); }
+.gallery-ready:not(.gallery-static) .gallery-piece[data-kind="artwork"] .gallery-art-button { width: 90vw; transform: none; }
+.gallery-ready:not(.gallery-static) .gallery-piece[data-layout="left"][data-kind="artwork"] .gallery-art-button { transform: none; }
 .gallery-ready:not(.gallery-static) .gallery-piece[data-layout="left"] figcaption { left: auto; right: 5vw; text-align: right; }
 .gallery-companion { display: none; }
 .gallery-ready:not(.gallery-static) .gallery-companion { display: block; position: absolute; left: 5vw; top: 9%; width: 20vw; height: 45%; border: 0 !important; padding: 0 !important; border-radius: 0 !important; background: transparent !important; transform: rotate(-8deg); box-shadow: 0 30px 80px #0008; }

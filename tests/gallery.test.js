@@ -2,16 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { sceneAt, artworkPose } from '../assets/gallery-motion.js';
-import { artworks, exhibition, companions } from '../assets/gallery-data.js';
+import { artworks, exhibition } from '../assets/gallery-data.js';
 
 test('a whole exhibition takes less than four extra screens and reverses without hysteresis', () => {
   const height = 833, top = 900;
+  const { step } = sceneAt(0, top, height, exhibition.length);
   for (let index = 0; index < exhibition.length; index++) {
-    const y = top + index * height * .65;
+    const y = top + index * step;
     assert.equal(sceneAt(y, top, height, exhibition.length).active, index);
     assert.ok(Math.abs(sceneAt(y, top, height, exhibition.length).position - index) < 1e-9);
   }
-  assert.ok((exhibition.length - 1) * .65 < 4);
+  assert.ok((exhibition.length - 1) * step / height < 4);
   assert.equal(sceneAt(-999, top, height, exhibition.length).active, 0);
   assert.equal(sceneAt(99999, top, height, exhibition.length).active, exhibition.length - 1);
 });
@@ -33,9 +34,10 @@ test('artworks remain upright and constant-sized while changing scenes', () => {
 test('seventeen approved artworks retain stable IDs and excluded images are absent everywhere', () => {
   assert.equal(artworks.length, 17);
   assert.equal(new Set(artworks.map(art => art.id)).size, 17);
-  assert.equal(exhibition.length, 6);
+  assert.equal(exhibition.length, 17);
+  assert.deepEqual(exhibition.map(art => art.id).sort(), artworks.map(art => art.id).sort());
   for (const id of ['s13', 's16']) {
-    assert.ok(![...artworks, ...exhibition, ...companions].some(art => art.id === id));
+    assert.ok(![...artworks, ...exhibition].some(art => art.id === id));
     for (const extension of ['jpg', 'webp']) assert.ok(!existsSync(new URL(`../assets/fanart/${id}.${extension}`, import.meta.url)));
   }
   for (const id of ['s17', 's18', 's19']) assert.ok(artworks.some(art => art.id === id));

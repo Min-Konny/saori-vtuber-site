@@ -1,4 +1,4 @@
-import { artworks, exhibition, companions } from './gallery-data.js';
+import { artworks, exhibition } from './gallery-data.js';
 import { artworkPose, sceneAt, clamp } from './gallery-motion.js';
 
 const section = document.getElementById('gallery');
@@ -98,18 +98,7 @@ const pieces = exhibition.map((art, sceneIndex) => {
   button.addEventListener('click', () => showArtwork(artworks.indexOf(art)));
   const caption = document.createElement('figcaption');
   caption.append(textNode('p', 'art-subtitle', art.subtitle), textNode('p', 'art-credit', art.credit));
-  const companionArt = companions[sceneIndex];
-  const companion = document.createElement('button');
-  companion.type = 'button';
-  companion.className = 'gallery-companion';
-  companion.setAttribute('aria-label', `${companionArt.alt}を大きく見る`);
-  const companionImage = document.createElement('img');
-  companionImage.src = companionArt.preview || companionArt.image;
-  companionImage.alt = companionArt.alt;
-  companionImage.decoding = 'async';
-  companion.append(companionImage);
-  companion.addEventListener('click', () => showArtwork(artworks.indexOf(companionArt)));
-  figure.append(companion, button, caption);
+  figure.append(button, caption);
   track.append(figure);
   return figure;
 });
@@ -142,7 +131,8 @@ function measure() {
   viewHeight = Math.max(1, innerHeight - navHeight);
   section.style.setProperty('--gallery-nav', `${navHeight}px`);
   section.style.setProperty('--gallery-height', `${viewHeight}px`);
-  section.style.height = isStatic() ? 'auto' : `${viewHeight + (pieces.length - 1) * viewHeight * .65}px`;
+  const { step } = sceneAt(0, 0, viewHeight, pieces.length);
+  section.style.height = isStatic() ? 'auto' : `${viewHeight + (pieces.length - 1) * step}px`;
   galleryTop = section.getBoundingClientRect().top + scrollY - navHeight;
   requestDraw();
 }
@@ -165,7 +155,8 @@ function setMode() {
 function move(direction) {
   if (isStatic()) return;
   const target = clamp(Math.round(position) + direction, 0, pieces.length - 1);
-  window.scrollTo({ top: galleryTop + target * viewHeight * .65, behavior: 'smooth' });
+  const { step } = sceneAt(0, 0, viewHeight, pieces.length);
+  window.scrollTo({ top: galleryTop + target * step, behavior: 'smooth' });
 }
 
 section.querySelector('[data-gallery-next]').addEventListener('click', () => move(1));
