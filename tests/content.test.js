@@ -23,6 +23,7 @@ test('private hero uses supplied portrait and preserves a non-cropping image',()
  assert.match(hero,/width="1448" height="2048"/);
  const css=readFileSync(new URL('../assets/keyvisual.css',import.meta.url),'utf8');
  assert.match(css,/\.hero-keyvisual\s*\{[^}]*object-fit: contain/);
+ assert.match(css,/\.hero-keyvisual\s*\{[^}]*position: absolute; inset: 0; min-height: 0/);
  assert.match(css,/nav \.nav-logo\s*\{[^}]*position: static/);
  assert.match(css,/@media \(max-width: 900px\)/);
  assert.match(css,/@media \(max-width: 480px\)/);
