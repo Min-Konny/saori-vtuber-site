@@ -1,4 +1,4 @@
-import { artworks, exhibition } from './gallery-data.js';
+import { artworks, exhibition, companions } from './gallery-data.js';
 import { artworkPose, sceneAt, clamp } from './gallery-motion.js';
 
 const section = document.getElementById('gallery');
@@ -98,7 +98,7 @@ const pieces = exhibition.map((art, sceneIndex) => {
   button.addEventListener('click', () => showArtwork(artworks.indexOf(art)));
   const caption = document.createElement('figcaption');
   caption.append(textNode('p', 'art-subtitle', art.subtitle), textNode('h3', '', art.title), textNode('p', 'art-credit', art.credit));
-  const companionArt = artworks[[3, 4, 11, 9, 12, 10][sceneIndex]];
+  const companionArt = companions[sceneIndex];
   const companion = document.createElement('button');
   companion.type = 'button';
   companion.className = 'gallery-companion';

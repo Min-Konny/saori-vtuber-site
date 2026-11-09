@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { sceneAt, artworkPose } from '../assets/gallery-motion.js';
-import { artworks, exhibition } from '../assets/gallery-data.js';
+import { artworks, exhibition, companions } from '../assets/gallery-data.js';
 
 test('a whole exhibition takes less than four extra screens and reverses without hysteresis', () => {
   const height = 833, top = 900;
@@ -28,10 +28,15 @@ test('artwork movement changes only horizontal position and opacity, never size 
   assert.ok(artworkPose(1, 1.5).x < 0 && artworkPose(2, 1.5).x > 0);
 });
 
-test('all sixteen original artworks and display copies are present without fabricated credits', () => {
-  assert.equal(artworks.length, 16);
-  assert.equal(new Set(artworks.map(art => art.id)).size, 16);
+test('seventeen approved artworks retain stable IDs and excluded images are absent everywhere', () => {
+  assert.equal(artworks.length, 17);
+  assert.equal(new Set(artworks.map(art => art.id)).size, 17);
   assert.equal(exhibition.length, 6);
+  for (const id of ['s13', 's16']) {
+    assert.ok(![...artworks, ...exhibition, ...companions].some(art => art.id === id));
+    for (const extension of ['jpg', 'webp']) assert.ok(!existsSync(new URL(`../assets/fanart/${id}.${extension}`, import.meta.url)));
+  }
+  for (const id of ['s17', 's18', 's19']) assert.ok(artworks.some(art => art.id === id));
   for (const art of artworks) {
     assert.ok(existsSync(new URL(`../${art.image}`, import.meta.url)));
     assert.ok(existsSync(new URL(`../${art.preview}`, import.meta.url)));
