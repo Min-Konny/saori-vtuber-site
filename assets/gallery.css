@@ -82,11 +82,11 @@ html.gallery-view nav a, html.gallery-view .nav-logo-name { color: #f8e9f2; }
  #gallery { --gallery-nav: 140px; }
  .gallery-track { grid-template-columns: 1fr; }
  .gallery-ready:not(.gallery-static) .gallery-track { inset: 72px 0 75px; perspective: 950px; }
- .gallery-ready:not(.gallery-static) .gallery-art-button { height: calc(var(--gallery-height) - 210px); min-height: 140px; width: 90vw; }
+ .gallery-ready:not(.gallery-static) .gallery-art-button { height: calc(var(--gallery-height) - 240px); min-height: 140px; width: 90vw; }
  .gallery-ready:not(.gallery-static) .gallery-piece[data-kind] .gallery-art-button { transform: none; width: 90vw; }
  .gallery-ready:not(.gallery-static) .gallery-piece[data-layout="left"][data-kind="artwork"] .gallery-art-button { transform: none; }
  .gallery-ready:not(.gallery-static) .gallery-companion { display: none; }
- .gallery-ready:not(.gallery-static) .gallery-piece figcaption { position: relative; left: auto; top: auto; width: 90%; text-align: center; margin-top: 12px; }
+ .gallery-ready:not(.gallery-static) .gallery-piece figcaption { position: relative; left: auto; top: auto; bottom: auto; width: 90%; text-align: center; margin-top: 12px; }
  .gallery-ready:not(.gallery-static) .gallery-piece[data-layout="left"] figcaption { right: auto; text-align: center; }
  .gallery-piece h3 { font-size: 30px; }
  .gallery-piece .art-subtitle { margin-bottom: 6px; font-size: 9px; }
