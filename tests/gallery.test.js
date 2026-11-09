@@ -1,35 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { sceneAt, artworkPose } from '../assets/gallery-motion.js';
 import { artworks, exhibition } from '../assets/gallery-data.js';
-
-test('a whole exhibition takes less than four extra screens and reverses without hysteresis', () => {
-  const height = 833, top = 900;
-  const { step } = sceneAt(0, top, height, exhibition.length);
-  for (let index = 0; index < exhibition.length; index++) {
-    const y = top + index * step;
-    assert.equal(sceneAt(y, top, height, exhibition.length).active, index);
-    assert.ok(Math.abs(sceneAt(y, top, height, exhibition.length).position - index) < 1e-9);
-  }
-  assert.ok((exhibition.length - 1) * step / height < 4);
-  assert.equal(sceneAt(-999, top, height, exhibition.length).active, 0);
-  assert.equal(sceneAt(99999, top, height, exhibition.length).active, exhibition.length - 1);
-});
-
-test('artworks remain upright and constant-sized while changing scenes', () => {
-  const main = artworkPose(2, 2);
-  assert.equal(main.x, 0); assert.equal(main.opacity, 1);
-  for (const position of [0, .25, .5, 1, 2, 3.5, 5]) {
-    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'x']);
-  }
-  assert.ok(artworkPose(1, 2).x < -60);
-  assert.ok(artworkPose(3, 2).x > 60);
-  assert.equal(artworkPose(4, 2).opacity, 0);
-  assert.ok(artworkPose(1, 1.5).x < 0 && artworkPose(2, 1.5).x > 0);
-  const code = readFileSync(new URL('../assets/gallery.js', import.meta.url), 'utf8');
-  assert.doesNotMatch(code, /pose\.(?:rotation|scale|y)/);
-});
 
 test('seventeen approved artworks retain stable IDs and excluded images are absent everywhere', () => {
   assert.equal(artworks.length, 17);

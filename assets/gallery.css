@@ -1,4 +1,4 @@
-/* A short native-scroll exhibition: composition changes, not card stacking. */
+/* A manual gallery; vertical page scrolling never changes the selected artwork. */
 #gallery { --gallery-nav: 68px; --gallery-height: calc(100svh - var(--gallery-nav)); position: relative; max-width: none; padding: 0; margin: 0; color: #fff; background: #120914; isolation: isolate; scroll-margin-top: var(--gallery-nav); }
 #gallery, #gallery * { cursor: auto !important; }
 #gallery button, #gallery a { cursor: pointer !important; }
@@ -30,11 +30,14 @@
 .gallery-exit { color: #fff; font: 12px var(--font-ja); text-decoration: none; border-bottom: 1px solid #ffffff60; padding: 12px 0; }
 .gallery-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: #ffffff18; z-index: 5; }
 .gallery-progress span { display: block; height: 100%; width: 0; background: #ffbedc; }
-.gallery-ready:not(.gallery-static) .gallery-stage { position: sticky; top: var(--gallery-nav); height: var(--gallery-height); min-height: 0; }
+.gallery-ready:not(.gallery-static) .gallery-stage { position: relative; height: var(--gallery-height); min-height: 0; }
 .gallery-ready:not(.gallery-static) .gallery-top { position: absolute; inset: 0 0 auto; }
 .gallery-ready:not(.gallery-static) .gallery-bottom { position: absolute; inset: auto 0 0; }
 .gallery-ready:not(.gallery-static) .gallery-track { position: absolute; inset: 80px 0 86px; display: block; padding: 0; perspective: 1300px; }
-.gallery-ready:not(.gallery-static) .gallery-piece { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; will-change: transform; transform-origin: 50% 50%; }
+.gallery-ready:not(.gallery-static) .gallery-piece { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 400ms ease; }
+.gallery-piece[inert] { pointer-events: none; }
+.gallery-controls button:disabled { opacity: .3; cursor: default !important; }
+.gallery-track { touch-action: pan-y pinch-zoom; }
 .gallery-ready:not(.gallery-static) .gallery-art-button { height: calc(var(--gallery-height) - 255px); min-height: 180px; max-height: 620px; width: min(62vw, 880px); }
 .gallery-ready:not(.gallery-static) .gallery-art-button[data-kind="object"] img { max-height: 100%; width: auto; max-width: 100%; object-fit: contain; }
 .gallery-ready:not(.gallery-static) .gallery-piece figcaption { position: absolute; left: 5vw; top: auto; bottom: 4%; width: 23%; text-align: left; pointer-events: none; }
@@ -95,5 +98,6 @@ html.gallery-view nav a, html.gallery-view .nav-logo-name { color: #f8e9f2; }
  .gallery-static .gallery-art-button { height: 50svh; }
 }
 @media(prefers-reduced-motion:reduce) {
+ .gallery-piece { transition: none !important; }
  .gallery-shader { display: none; }
 }

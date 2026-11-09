@@ -1,5 +1,5 @@
 import { artworks, exhibition } from './gallery-data.js';
-import { artworkPose, sceneAt, clamp } from './gallery-motion.js';
+import { clamp } from './gallery-motion.js';
 
 const section = document.getElementById('gallery');
 const track = section.querySelector('.gallery-track');
@@ -16,7 +16,6 @@ let manualStatic = escapeStorage(() => localStorage.getItem('saori-gallery-stati
 let current = 0;
 let position = 0;
 let inView = false;
-let queued = false;
 let galleryTop = 0;
 let navHeight = 68;
 let viewHeight = innerHeight;
@@ -104,26 +103,19 @@ const pieces = exhibition.map((art, sceneIndex) => {
 });
 
 function draw() {
-  queued = false;
   if (isStatic()) return;
-  const state = sceneAt(scrollY, galleryTop, viewHeight, pieces.length);
-  position = state.position;
-  current = state.active;
+  position = current;
   pieces.forEach((piece, index) => {
-    const pose = artworkPose(index, position);
-    piece.style.transform = `translateX(${pose.x}vw)`;
-    piece.style.opacity = pose.opacity;
+    piece.style.opacity = index === current ? '1' : '0';
     piece.inert = index !== current;
     piece.setAttribute('aria-hidden', String(index !== current));
-    piece.style.zIndex = String(10 - Math.round(Math.abs(index - position) * 3));
+    piece.style.zIndex = index === current ? '2' : '1';
   });
   section.dataset.active = String(current);
   counter.textContent = `${String(current + 1).padStart(2,'0')} / ${String(pieces.length).padStart(2,'0')}`;
   progressBar.style.width = `${(position + 1) / pieces.length * 100}%`;
-}
-
-function requestDraw() {
-  if (!queued) { queued = true; requestAnimationFrame(draw); }
+  section.querySelector('[data-gallery-prev]').disabled = current === 0;
+  section.querySelector('[data-gallery-next]').disabled = current === pieces.length - 1;
 }
 
 function measure() {
@@ -131,10 +123,9 @@ function measure() {
   viewHeight = Math.max(1, innerHeight - navHeight);
   section.style.setProperty('--gallery-nav', `${navHeight}px`);
   section.style.setProperty('--gallery-height', `${viewHeight}px`);
-  const { step } = sceneAt(0, 0, viewHeight, pieces.length);
-  section.style.height = isStatic() ? 'auto' : `${viewHeight + (pieces.length - 1) * step}px`;
+  section.style.height = isStatic() ? 'auto' : `${viewHeight}px`;
   galleryTop = section.getBoundingClientRect().top + scrollY - navHeight;
-  requestDraw();
+  draw();
 }
 
 function setMode() {
@@ -152,15 +143,39 @@ function setMode() {
   stopBackground();
 }
 
+let nextMoveAt = 0;
 function move(direction) {
   if (isStatic()) return;
-  const target = clamp(Math.round(position) + direction, 0, pieces.length - 1);
-  const { step } = sceneAt(0, 0, viewHeight, pieces.length);
-  window.scrollTo({ top: galleryTop + target * step, behavior: 'smooth' });
+  if (performance.now() < nextMoveAt) return;
+  const target = clamp(current + direction, 0, pieces.length - 1);
+  if (target === current) return;
+  nextMoveAt = performance.now() + 420;
+  current = target;
+  draw();
 }
 
 section.querySelector('[data-gallery-next]').addEventListener('click', () => move(1));
 section.querySelector('[data-gallery-prev]').addEventListener('click', () => move(-1));
+let touchOrigin = null;
+track.addEventListener('touchstart', event => {
+  const touch = event.touches.length === 1 ? event.touches[0] : null;
+  touchOrigin = touch ? { x: touch.clientX, y: touch.clientY } : null;
+}, { passive: true });
+track.addEventListener('touchend', event => {
+  if (!touchOrigin || isStatic()) return;
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX - touchOrigin.x, dy = touch.clientY - touchOrigin.y;
+  touchOrigin = null;
+  if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+  if (event.cancelable) event.preventDefault();
+  move(dx < 0 ? 1 : -1);
+}, { passive: false });
+track.addEventListener('touchcancel', () => { touchOrigin = null; }, { passive: true });
+section.addEventListener('keydown', event => {
+  if (isStatic() || dialog.open || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+  event.preventDefault();
+  move(event.key === 'ArrowRight' ? 1 : -1);
+});
 section.querySelector('[data-gallery-index]').addEventListener('click', showIndex);
 staticButton.addEventListener('click', () => {
   manualStatic = !isStatic();
@@ -172,7 +187,6 @@ dialog.querySelector('[data-art-close]').addEventListener('click', () => dialog.
 dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
 section.classList.add('gallery-ready');
 setMode();
-addEventListener('scroll', requestDraw, { passive: true });
 addEventListener('resize', measure, { passive: true });
 new ResizeObserver(measure).observe(nav);
 document.fonts.ready.then(measure);
