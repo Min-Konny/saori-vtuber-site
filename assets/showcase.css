@@ -1,0 +1,59 @@
+/* Pink editorial showcase. Content works without scroll-animation support. */
+#youtube, #shop { position: relative; isolation: isolate; }
+#youtube::before, #shop::before {
+ content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+ background-image: linear-gradient(#bb47600d 1px, transparent 1px), linear-gradient(90deg, #bb47600d 1px, transparent 1px);
+ background-size: 48px 48px;
+ mask-image: linear-gradient(transparent, #000 12%, #000 88%, transparent);
+}
+#youtube .yt-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 64px; max-width: 920px; margin-inline: auto; padding: 12px 8px 48px; perspective: 1400px; }
+#youtube .yt-card {
+ position: relative; border: 1px solid #e9a9bd; border-radius: 28px; background: #fff9fc;
+ box-shadow: 0 18px 52px #9b25431c, 0 2px 0 #fff inset;
+ transition: box-shadow .25s, border-color .25s;
+ transform: none; overflow: hidden; isolation: isolate;
+}
+#youtube .yt-card:nth-child(2) { margin-inline: 3% 0; }
+#youtube .yt-card:nth-child(3) { margin-inline: 0 3%; }
+#youtube .yt-card:hover { transform: none; border-color: var(--red-main); box-shadow: 0 24px 60px #9b25432b; }
+#youtube .yt-thumb-wrap { aspect-ratio: 16 / 9; background: #f3cad7; }
+#youtube .yt-thumb-wrap img { opacity: 1; transition: none; }
+#youtube .yt-label { font-size: clamp(16px, 2.1vw, 24px); line-height: 1.6; padding: 22px 28px 10px; letter-spacing: .025em; overflow-wrap: anywhere; }
+#youtube .yt-date { padding: 0 28px 24px; letter-spacing: .05em; }
+#youtube .yt-card:focus-visible { outline-offset: 6px; outline: 3px solid var(--red-main); z-index: 10; }
+#shop .shop-grid { gap: 28px; }
+#shop .shop-card { border: 1px solid #e9a9bd; box-shadow: 0 16px 40px #9b25431a; }
+.hero-art-stage::after { content: ''; position: absolute; inset: 4%; z-index: -1; pointer-events: none; border: 1px solid #c04d7033; border-radius: 50%; transform: rotate(12deg) scaleX(.9); }
+/* Native view timelines follow scroll position, including reverse scroll. No RAF loops,
+   external animation libraries, autoplay media or wheel/touch event interception. */
+@supports (animation-timeline: view()) {
+ @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  #youtube .yt-card { position: sticky; top: 96px; animation: card-depth linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+  #youtube .yt-card:nth-child(2) { top: 112px; }
+  #youtube .yt-card:nth-child(3) { top: 128px; }
+  #youtube .yt-card:focus-within { transform: none; }
+  .hero-art-stage { animation: portrait-depth linear both; animation-timeline: view(); animation-range: exit 0% exit 100%; }
+ }
+ @media (prefers-reduced-motion: no-preference) {
+  #youtube .yt-thumb-wrap img { animation: image-arrival linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+ }
+}
+@keyframes card-depth { from { transform: translateY(36px) rotateX(4deg) scale(.94); } to { transform: translateY(0) rotateX(0) scale(1); } }
+@keyframes image-arrival { from { transform: scale(1.075); } to { transform: scale(1); } }
+@keyframes portrait-depth { from { transform: translateY(0); } to { transform: translateY(36px); } }
+@media (max-width: 900px) {
+ #youtube .yt-grid { gap: 28px; padding: 8px 0 24px; perspective: none; }
+ #youtube .yt-card:nth-child(n) { position: relative; top: auto; margin-inline: 0; border-radius: 20px; }
+ #youtube .yt-label { padding: 16px 18px 8px; font-size: 16px; }
+ #youtube .yt-date { padding: 0 18px 18px; }
+ #shop .shop-grid { gap: 18px; }
+}
+@media (max-width: 480px) {
+ #youtube::before, #shop::before { background-size: 32px 32px; }
+ #shop .shop-grid { grid-template-columns: minmax(0, 1fr); }
+ #shop .shop-card-img-wrap { aspect-ratio: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+ #youtube .yt-card, #youtube .yt-thumb-wrap img, .hero-art-stage { animation: none !important; transform: none !important; }
+ #youtube .yt-card:nth-child(n) { position: relative; top: auto; margin-inline: 0; }
+}
