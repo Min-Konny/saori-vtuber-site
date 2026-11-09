@@ -14,7 +14,7 @@ test('showcase is progressive enhancement without hiding media or replacing cont
 });
 test('mobile and reduced motion retain normal document flow',()=>{
  assert.match(css,/@media \(min-width: 901px\) and \(prefers-reduced-motion: no-preference\)/);
- assert.match(css,/@media \(max-width: 900px\)[\s\S]*position: relative; top: auto/);
+ assert.match(css,/@media \(max-width: 900px\)[\s\S]*grid-template-columns: minmax\(0, 1fr\)/);
  assert.match(css,/@media \(prefers-reduced-motion: reduce\)[\s\S]*animation: none !important; transform: none !important/);
  assert.match(css,/:focus-visible[^}]*outline: 3px/);
  assert.doesNotMatch(css,/url\(/);
