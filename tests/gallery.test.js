@@ -16,10 +16,12 @@ test('a whole exhibition takes less than four extra screens and reverses without
   assert.equal(sceneAt(99999, top, height, exhibition.length).active, exhibition.length - 1);
 });
 
-test('stationary scenes have a single front-facing artwork and neighbors remain off center', () => {
+test('artwork movement changes only horizontal position and opacity, never size or perspective', () => {
   const main = artworkPose(2, 2);
-  assert.ok(main.x === 0 && main.z === 0 && main.rotateY === 0);
-  assert.equal(main.scale, 1); assert.equal(main.opacity, 1);
+  assert.equal(main.x, 0); assert.equal(main.opacity, 1);
+  for (const position of [0, .25, .5, 1, 2, 3.5, 5]) {
+    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'x']);
+  }
   assert.ok(artworkPose(1, 2).x < -100);
   assert.ok(artworkPose(3, 2).x > 100);
   assert.equal(artworkPose(4, 2).opacity, 0);

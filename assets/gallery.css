@@ -69,15 +69,6 @@
 html.gallery-view #custom-cursor, html.gallery-view #sparkle-canvas, html.gallery-view #ambient-canvas, html.gallery-view #float-shop { visibility: hidden; }
 html.gallery-view nav { background: #130d18ed; border-color: #ffffff16; }
 html.gallery-view nav a, html.gallery-view .nav-logo-name { color: #f8e9f2; }
-#hero { background: radial-gradient(ellipse at 75% 40%, #56314d, #1d1225 55%, #120c18); color: #fff; }
-#hero .heart-bg, #hero .hero-motif { display: none; }
-#hero .hero-eyebrow, #hero .hero-name-ja, #hero .hero-scroll { color: #e2c6d8; }
-#hero .hero-name { background: linear-gradient(120deg, #fff, #ffc0dc); background-clip: text; -webkit-background-clip: text; }
-#hero .hero-badge { background: #ffffff0b; color: #fff; border-color: #ffffff44; box-shadow: none; }
-#hero .hero-actions a { background: #ffffff08; color: #fff; border-color: #ffffff44; }
-#hero .hero-actions a:first-child { background: #f4ccdf; color: #301326; border-color: #f4ccdf; }
-#hero .hero-art-stage::before { background: radial-gradient(ellipse, #dfa1c21c, transparent); border: 1px solid #ffffff1c; border-radius: 50%; }
-#hero .hero-art-stage::after { border-color: #ffffff16; }
 @media(max-width:900px) {
  #gallery { --gallery-nav: 140px; }
  .gallery-track { grid-template-columns: 1fr; }
