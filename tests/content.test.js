@@ -32,3 +32,14 @@ test('works remain a fully visible list and navigation has a separate flow conta
  assert.equal((works.match(/class="tl-item"/g)||[]).length,13);
  assert.match(html,/<div class="nav-links">/);
 });
+test('responsive polish retains navigation and avoids floating mobile content obstruction',()=>{
+ const css=readFileSync(new URL('../assets/keyvisual.css',import.meta.url),'utf8');
+ assert.match(css,/\.nav-links a\s*\{[^}]*min-height: 44px/);
+ assert.match(css,/@media \(max-width: 480px\)[\s\S]*grid-template-columns: 1\.5fr repeat\(3, minmax\(0, 1fr\)\)/);
+ assert.match(css,/@media \(max-width: 600px\)\s*\{\s*#float-shop\s*\{ display: none;/);
+ assert.match(html,/<a href="#shop">SHOP<\/a>/);
+ assert.match(css,/\.links-grid\s*\{ grid-template-columns: minmax\(0, 1fr\)/);
+ assert.match(css,/\.hero-art-stage\s*\{[^}]*calc\(100svh - 200px\)/);
+ assert.match(css,/@media \(prefers-reduced-motion: reduce\)/);
+ assert.match(css,/\.reveal\s*\{ opacity: 1; transform: none;/);
+});
