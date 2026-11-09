@@ -16,16 +16,18 @@ test('a whole exhibition takes less than four extra screens and reverses without
   assert.equal(sceneAt(99999, top, height, exhibition.length).active, exhibition.length - 1);
 });
 
-test('artwork movement changes only horizontal position and opacity, never size or perspective', () => {
+test('artworks orbit and rotate without zoom or perspective, settling upright', () => {
   const main = artworkPose(2, 2);
-  assert.equal(main.x, 0); assert.equal(main.opacity, 1);
+  assert.equal(main.x, 0); assert.equal(main.y, 0); assert.equal(main.rotation, 0); assert.equal(main.opacity, 1);
   for (const position of [0, .25, .5, 1, 2, 3.5, 5]) {
-    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'x']);
+    assert.deepEqual(Object.keys(artworkPose(2, position)).sort(), ['opacity', 'rotation', 'x', 'y']);
   }
-  assert.ok(artworkPose(1, 2).x < -100);
-  assert.ok(artworkPose(3, 2).x > 100);
+  assert.ok(artworkPose(1, 2).x < -60);
+  assert.ok(artworkPose(3, 2).x > 60);
   assert.equal(artworkPose(4, 2).opacity, 0);
   assert.ok(artworkPose(1, 1.5).x < 0 && artworkPose(2, 1.5).x > 0);
+  assert.equal(artworkPose(1, 1.5).rotation, -45);
+  assert.equal(artworkPose(2, 1.5).rotation, 45);
 });
 
 test('seventeen approved artworks retain stable IDs and excluded images are absent everywhere', () => {
@@ -49,6 +51,9 @@ test('gallery is independent of the video feed, with native dialog and bypass li
   const code = readFileSync(new URL('../assets/gallery.js', import.meta.url), 'utf8');
   assert.match(html, /<dialog[^>]*id="art-dialog"/);
   assert.match(html, /data-gallery-index/);
-  assert.match(html, /class="gallery-exit" href="#profile"/);
+  assert.match(html, /class="gallery-exit" href="#information"/);
+  assert.ok(html.indexOf('<!-- TAGS -->') < html.indexOf('<!-- GALLERY -->'));
+  assert.ok(html.indexOf('<!-- GALLERY -->') < html.indexOf('<!-- INFORMATION -->'));
+  assert.doesNotMatch(code, /textNode\('(?:h3|strong)', '', art.title\)/);
   assert.doesNotMatch(code, /preventDefault\(\).*wheel|querySelector\([^)]*youtube|fetch\(/);
 });

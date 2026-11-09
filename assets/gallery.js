@@ -37,7 +37,7 @@ function openDialog() {
 
 function showArtwork(index) {
   const art = artworks[index];
-  dialogTitle.textContent = art.title;
+  dialogTitle.textContent = 'Artwork';
   const img = document.createElement('img');
   img.className = 'art-dialog-image';
   img.src = art.image;
@@ -72,7 +72,7 @@ function showIndex() {
     image.src = art.preview || art.image;
     image.loading = 'lazy';
     image.alt = art.alt;
-    button.append(image, textNode('strong', '', art.title), textNode('small', '', art.credit));
+    button.append(image, textNode('small', '', art.credit));
     button.addEventListener('click', () => showArtwork(index));
     list.append(button);
   });
@@ -89,7 +89,7 @@ const pieces = exhibition.map((art, sceneIndex) => {
   button.type = 'button';
   button.className = 'gallery-art-button';
   button.dataset.kind = art.kind || 'object';
-  button.setAttribute('aria-label', `${art.title}を大きく見る`);
+  button.setAttribute('aria-label', `${art.alt}を大きく見る`);
   const image = document.createElement('img');
   image.src = art.preview || art.image;
   image.alt = art.alt;
@@ -97,12 +97,12 @@ const pieces = exhibition.map((art, sceneIndex) => {
   button.append(image);
   button.addEventListener('click', () => showArtwork(artworks.indexOf(art)));
   const caption = document.createElement('figcaption');
-  caption.append(textNode('p', 'art-subtitle', art.subtitle), textNode('h3', '', art.title), textNode('p', 'art-credit', art.credit));
+  caption.append(textNode('p', 'art-subtitle', art.subtitle), textNode('p', 'art-credit', art.credit));
   const companionArt = companions[sceneIndex];
   const companion = document.createElement('button');
   companion.type = 'button';
   companion.className = 'gallery-companion';
-  companion.setAttribute('aria-label', `${companionArt.title}を大きく見る`);
+  companion.setAttribute('aria-label', `${companionArt.alt}を大きく見る`);
   const companionImage = document.createElement('img');
   companionImage.src = companionArt.preview || companionArt.image;
   companionImage.alt = companionArt.alt;
@@ -122,7 +122,7 @@ function draw() {
   current = state.active;
   pieces.forEach((piece, index) => {
     const pose = artworkPose(index, position);
-    piece.style.transform = `translateX(${pose.x}vw)`;
+    piece.style.transform = `translate(${pose.x}vw, ${pose.y}vh) rotate(${pose.rotation}deg)`;
     piece.style.opacity = pose.opacity;
     piece.inert = index !== current;
     piece.setAttribute('aria-hidden', String(index !== current));
